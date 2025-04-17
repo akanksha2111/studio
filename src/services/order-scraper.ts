@@ -20,6 +20,10 @@ export interface ScrapedOrder {
   productName?: string;
   storeName?: string;
   status: 'Live' | 'Mock';
+  deliveryTime: string;
+  foodTypes: string;
+  rating: string;
+  pricePerPerson: string;
 }
 
 export async function scrapeOrders(): Promise<ScrapedOrder[]> {

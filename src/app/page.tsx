@@ -20,6 +20,10 @@ const mockOrders: Order[] = [
     drop: "Customer X",
     timestamp: new Date().toISOString(),
     status: "Mock",
+    deliveryTime: "25-30 mins",
+    foodTypes: "Burger, Fast Food",
+    rating: "4.2",
+    pricePerPerson: "₹200",
   },
   {
     id: "2",
@@ -29,6 +33,10 @@ const mockOrders: Order[] = [
     drop: "Customer Y",
     timestamp: new Date().toISOString(),
     status: "Mock",
+    deliveryTime: "30-35 mins",
+    foodTypes: "Pizza, Italian",
+    rating: "4.5",
+    pricePerPerson: "₹300",
   },
   {
     id: "3",
@@ -38,13 +46,17 @@ const mockOrders: Order[] = [
     drop: "Customer Z",
     timestamp: new Date().toISOString(),
     status: "Mock",
+    deliveryTime: "40-45 mins",
+    foodTypes: "Sushi, Japanese",
+    rating: "4.7",
+    pricePerPerson: "₹500",
   },
 ];
 
 export default function Home() {
   const [walletBalance, setWalletBalance] = useState<number>(2000);
   const [acceptedOrders, setAcceptedOrders] = useState<string[]>([]);
-  const [nearbyOrders, setNearbyOrders] = useState<Order[]>([]);
+  const [nearbyOrders, setNearbyOrders] = useState<Order[]>(mockOrders);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null); // New state for wallet error
 
