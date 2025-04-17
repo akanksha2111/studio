@@ -42,9 +42,9 @@ const mockOrders: Order[] = [
 ];
 
 export default function Home() {
-  const [walletBalance, setWalletBalance] = useState<number>(200);
+  const [walletBalance, setWalletBalance] = useState<number>(2000);
   const [acceptedOrders, setAcceptedOrders] = useState<string[]>([]);
-  const [nearbyOrders, setNearbyOrders] = useState<Order[]>(mockOrders);
+  const [nearbyOrders, setNearbyOrders] = useState<Order[]>([]);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null); // New state for wallet error
 
@@ -128,6 +128,8 @@ export default function Home() {
                 <Badge>Value: ₹{order.value}</Badge>
                 <Badge className="ml-2">Distance: {order.distance} km</Badge>
               </div>
+              <div>Store: {order.storeName}</div>
+              <div>Item: {order.productName}</div>
               <div>Pickup: {order.pickup}</div>
               <div>Dropoff: {order.drop}</div>
               <div>
