@@ -5,40 +5,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Location, getCurrentLocation } from "@/services/geolocation";
+import { scrapeOrders, ScrapedOrder } from "@/services/order-scraper";
+import { Trash2 } from "lucide-react";
 
-interface Order {
-  id: string;
-  value: number;
-  items: string[];
-  pickupLocation: string;
-  dropLocation: string;
-  estimatedDeliveryTime: string;
-}
+interface Order extends ScrapedOrder {}
 
 const mockOrders: Order[] = [
   {
     id: "1",
     value: 50,
-    items: ["Burger", "Fries", "Coke"],
-    pickupLocation: "Restaurant A",
-    dropLocation: "Customer X",
-    estimatedDeliveryTime: "30 minutes",
+    distance: 2.5,
+    pickup: "Restaurant A",
+    drop: "Customer X",
+    timestamp: new Date().toISOString(),
+    status: "Mock",
   },
   {
     id: "2",
     value: 75,
-    items: ["Pizza", "Salad"],
-    pickupLocation: "Restaurant B",
-    dropLocation: "Customer Y",
-    estimatedDeliveryTime: "45 minutes",
+    distance: 3.0,
+    pickup: "Restaurant B",
+    drop: "Customer Y",
+    timestamp: new Date().toISOString(),
+    status: "Mock",
   },
   {
     id: "3",
     value: 120,
-    items: ["Sushi", "Sake"],
-    pickupLocation: "Restaurant C",
-    dropLocation: "Customer Z",
-    estimatedDeliveryTime: "60 minutes",
+    distance: 4.2,
+    pickup: "Restaurant C",
+    drop: "Customer Z",
+    timestamp: new Date().toISOString(),
+    status: "Mock",
   },
 ];
 
@@ -55,6 +53,14 @@ export default function Home() {
     };
 
     fetchLocation();
+
+    // Fetch new orders periodically
+    const intervalId = setInterval(async () => {
+      const scrapedOrders = await scrapeOrders();
+      setNearbyOrders((prevOrders) => [...prevOrders, ...scrapedOrders]);
+    }, 60000); // Fetch every 60 seconds
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const calculateTotalOrderValue = () => {
@@ -82,13 +88,12 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">SwiftWheels Driver Dashboard</h1>
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Wallet Balance</CardTitle>
         </CardHeader>
-        <CardContent>
-          ₹{walletBalance}
-        </CardContent>
+        <CardContent>₹{walletBalance}</CardContent>
       </Card>
 
       {currentLocation && (
@@ -111,11 +116,13 @@ export default function Home() {
             <CardContent>
               <div className="mb-2">
                 <Badge>Value: ₹{order.value}</Badge>
+                <Badge className="ml-2">Distance: {order.distance} km</Badge>
               </div>
-              <div>Items: {order.items.join(", ")}</div>
-              <div>Pickup: {order.pickupLocation}</div>
-              <div>Dropoff: {order.dropLocation}</div>
-              <div>Time: {order.estimatedDeliveryTime}</div>
+              <div>Pickup: {order.pickup}</div>
+              <div>Dropoff: {order.drop}</div>
+              <div>
+                Time: {new Date(order.timestamp).toLocaleTimeString()}
+              </div>
               <div className="mt-4 flex gap-2">
                 {!acceptedOrders.includes(order.id) ? (
                   <Button
@@ -130,7 +137,7 @@ export default function Home() {
                     variant="destructive"
                     onClick={() => rejectOrder(order.id)}
                   >
-                    Reject
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
               </div>
