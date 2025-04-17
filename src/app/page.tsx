@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Location, getCurrentLocation } from "@/services/geolocation";
 import { scrapeOrders, ScrapedOrder } from "@/services/order-scraper";
 import { Trash2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Order extends ScrapedOrder {}
 
@@ -45,6 +46,7 @@ export default function Home() {
   const [acceptedOrders, setAcceptedOrders] = useState<string[]>([]);
   const [nearbyOrders, setNearbyOrders] = useState<Order[]>(mockOrders);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
+  const [walletError, setWalletError] = useState<string | null>(null); // New state for wallet error
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -77,8 +79,9 @@ export default function Home() {
   const acceptOrder = (orderId: string, orderValue: number) => {
     if (canAcceptOrder(orderValue)) {
       setAcceptedOrders([...acceptedOrders, orderId]);
+      setWalletError(null); // Clear any existing error
     } else {
-      alert("Cannot accept order: insufficient wallet balance");
+      setWalletError("Cannot accept order: insufficient wallet balance"); // Set the error message
     }
   };
 
@@ -89,6 +92,13 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">SwiftWheels Driver Dashboard</h1>
+
+      {walletError && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription>{walletError}</AlertDescription>
+        </Alert>
+      )}
+
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Wallet Balance</CardTitle>
