@@ -24,6 +24,47 @@ const mockOrders: Order[] = [
     foodTypes: "Burger, Fast Food",
     rating: "4.2",
     pricePerPerson: "₹200",
+    foodItems: [
+      {
+        name: "Classic Burger",
+        price: 199,
+        category: "Burgers",
+        description: "Juicy beef patty with fresh vegetables"
+      },
+      {
+        name: "French Fries",
+        price: 99,
+        category: "Sides",
+        description: "Crispy golden fries"
+      }
+    ],
+    storeDetails: {
+      name: "Burger King",
+      address: "123 Main Street, Sector 1, Mumbai",
+      phone: "+91 9876543210",
+      cuisine: "Burger, Fast Food",
+      openingHours: "10:00 AM - 10:00 PM",
+      rating: 4.2,
+      totalRatings: 1250,
+      isOpen: true,
+      imageUrl: "https://example.com/burger-king.jpg"
+    },
+    addressDetails: {
+      pickup: {
+        street: "123 Main Street",
+        area: "Sector 1",
+        city: "Mumbai",
+        pincode: "400001",
+        landmark: "Near City Mall"
+      },
+      dropoff: {
+        street: "456 Park Road",
+        area: "Sector 2",
+        city: "Mumbai",
+        pincode: "400002",
+        landmark: "Near Central Park"
+      }
+    }
   },
   {
     id: "2",
@@ -37,6 +78,47 @@ const mockOrders: Order[] = [
     foodTypes: "Pizza, Italian",
     rating: "4.5",
     pricePerPerson: "₹300",
+    foodItems: [
+      {
+        name: "Margherita Pizza",
+        price: 299,
+        category: "Pizza",
+        description: "Classic tomato and mozzarella"
+      },
+      {
+        name: "Garlic Bread",
+        price: 149,
+        category: "Sides",
+        description: "Toasted with garlic butter"
+      }
+    ],
+    storeDetails: {
+      name: "Pizza Hut",
+      address: "456 Lake View, Sector 3, Delhi",
+      phone: "+91 9876543211",
+      cuisine: "Pizza, Italian",
+      openingHours: "11:00 AM - 11:00 PM",
+      rating: 4.5,
+      totalRatings: 980,
+      isOpen: true,
+      imageUrl: "https://example.com/pizza-hut.jpg"
+    },
+    addressDetails: {
+      pickup: {
+        street: "456 Lake View",
+        area: "Sector 3",
+        city: "Delhi",
+        pincode: "110001",
+        landmark: "Near Lake View Mall"
+      },
+      dropoff: {
+        street: "789 Garden Road",
+        area: "Sector 4",
+        city: "Delhi",
+        pincode: "110002",
+        landmark: "Near Garden Park"
+      }
+    }
   },
   {
     id: "3",
@@ -50,6 +132,47 @@ const mockOrders: Order[] = [
     foodTypes: "Sushi, Japanese",
     rating: "4.7",
     pricePerPerson: "₹500",
+    foodItems: [
+      {
+        name: "California Roll",
+        price: 399,
+        category: "Sushi",
+        description: "Crab, avocado, cucumber"
+      },
+      {
+        name: "Miso Soup",
+        price: 199,
+        category: "Soups",
+        description: "Traditional Japanese soup"
+      }
+    ],
+    storeDetails: {
+      name: "Sushi Master",
+      address: "789 Market Street, Sector 5, Bangalore",
+      phone: "+91 9876543212",
+      cuisine: "Sushi, Japanese",
+      openingHours: "12:00 PM - 10:00 PM",
+      rating: 4.7,
+      totalRatings: 750,
+      isOpen: true,
+      imageUrl: "https://example.com/sushi-master.jpg"
+    },
+    addressDetails: {
+      pickup: {
+        street: "789 Market Street",
+        area: "Sector 5",
+        city: "Bangalore",
+        pincode: "560001",
+        landmark: "Near Central Market"
+      },
+      dropoff: {
+        street: "321 Church Road",
+        area: "Sector 6",
+        city: "Bangalore",
+        pincode: "560002",
+        landmark: "Near City Church"
+      }
+    }
   },
 ];
 
@@ -140,13 +263,71 @@ export default function Home() {
                 <Badge>Value: ₹{order.value}</Badge>
                 <Badge className="ml-2">Distance: {order.distance} km</Badge>
               </div>
-              <div>Store: {order.storeName}</div>
-              <div>Item: {order.productName}</div>
-              <div>Pickup: {order.pickup}</div>
-              <div>Dropoff: {order.drop}</div>
-              <div>
-                Time: {new Date(order.timestamp).toLocaleTimeString()}
+              
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Store Information:</h4>
+                <div className="text-sm space-y-1">
+                  <div className="flex items-center">
+                    <span className="font-medium">Name:</span>
+                    <span className="ml-2">{order.storeDetails.name}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-medium">Cuisine:</span>
+                    <span className="ml-2">{order.storeDetails.cuisine}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-medium">Rating:</span>
+                    <span className="ml-2">{order.storeDetails.rating} ({order.storeDetails.totalRatings} ratings)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-medium">Status:</span>
+                    <span className={`ml-2 ${order.storeDetails.isOpen ? 'text-green-600' : 'text-red-600'}`}>
+                      {order.storeDetails.isOpen ? 'Open' : 'Closed'}
+                    </span>
+                  </div>
+                </div>
               </div>
+              
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Pickup Location:</h4>
+                <div className="text-sm space-y-1">
+                  <div>{order.addressDetails.pickup.street}</div>
+                  <div>{order.addressDetails.pickup.area}, {order.addressDetails.pickup.city}</div>
+                  <div>Pincode: {order.addressDetails.pickup.pincode}</div>
+                  {order.addressDetails.pickup.landmark && (
+                    <div className="text-gray-500">{order.addressDetails.pickup.landmark}</div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Dropoff Location:</h4>
+                <div className="text-sm space-y-1">
+                  <div>{order.addressDetails.dropoff.street}</div>
+                  <div>{order.addressDetails.dropoff.area}, {order.addressDetails.dropoff.city}</div>
+                  <div>Pincode: {order.addressDetails.dropoff.pincode}</div>
+                  {order.addressDetails.dropoff.landmark && (
+                    <div className="text-gray-500">{order.addressDetails.dropoff.landmark}</div>
+                  )}
+                </div>
+              </div>
+              
+              {order.foodItems && order.foodItems.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="font-semibold mb-2">Food Items:</h4>
+                  <div className="space-y-2">
+                    {order.foodItems.map((item, index) => (
+                      <div key={index} className="flex justify-between items-center text-sm">
+                        <div>
+                          <span className="font-medium">{item.name}</span>
+                          <span className="text-gray-500 ml-2">({item.category})</span>
+                        </div>
+                        <span className="text-green-600">₹{item.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="mt-4 flex gap-2">
                 {!acceptedOrders.includes(order.id) ? (
                   <Button
